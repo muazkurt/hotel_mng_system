@@ -65,7 +65,7 @@ public class Guest extends User
      * @return True if user found, False otherwise.
      * @throws FileNotFoundException for user_db.
      */
-    public boolean search_db() throws FileNotFoundException
+    protected boolean search_db() throws FileNotFoundException
     {
         Scanner file = new Scanner(new FileInputStream(guest_db));
         file.nextLine();
@@ -74,7 +74,7 @@ public class Guest extends User
             String [] guest_info = file.nextLine().split("\"");
             if(guest_info[1].equals(this.get_name()) && guest_info[3].equals(this.get_surname()))
             {
-                booked_room = working_on.data_set.get(Integer.valueOf(guest_info[5]));
+                booked_room = working_on.get(Integer.valueOf(guest_info[5]));
                 foundin_file = true;
             }
         }
@@ -85,21 +85,24 @@ public class Guest extends User
     /**
      * Books a room, If user didn't book a room. Updates booked_room with new booked room.
      */
-    public void book_room()
+    protected boolean book_room()
     {
+        boolean ret_val = false;
         if(working_on.show(0) > 0)
         {
             int temp = input_no();
-            if((temp < working_on.data_set.size() && temp > -1) && (working_on.data_set.get(temp).get_situation() == 0))
+            if((temp < working_on.size() && temp > -1) && (working_on.get(temp).get_situation() == 0))
             {
                 working_on.data_set.set(temp, new Room(this, 1, temp));
-                booked_room = working_on.data_set.get(temp);
+                booked_room = working_on.get(temp);
+                ret_val = true;
             }
             else if (temp == -1)
                 System.out.println("Cancelled.");
             else
                 System.out.println("Please select room correctly.");
         }
+        return ret_val;
     }
 
     /**
@@ -114,10 +117,10 @@ public class Guest extends User
     {
         LinkedList<String> input = new LinkedList<>();
         input.add("\"Name\", \"Surname\", \"Room no\"");
-        for(int i = 0; i < working_on.data_set.size(); ++i)
+        for(int i = 0; i < working_on.size(); ++i)
         {
-            if(working_on.data_set.get(i).get_situation() > 0)
-                input.add("\"" + working_on.data_set.get(i).get_name() + "\", \"" + working_on.data_set.get(i).get_surname() + "\", \"" + working_on.data_set.get(i).room_number() + "\"");
+            if(working_on.get(i).get_situation() > 0)
+                input.add("\"" + working_on.get(i).get_name() + "\", \"" + working_on.get(i).get_surname() + "\", \"" + working_on.get(i).room_number() + "\"");
         }
         PrintWriter output = new PrintWriter(guest_db);
         while(input.size() > 0)
@@ -130,7 +133,7 @@ public class Guest extends User
      * Cancels the room. If user booked a room then can do this operation.
      * If there is not a booked room. User will blocked to do this.
      */
-    public void cancel_room()
+    protected void cancel_room()
     {
         if(get_room() == null)
             System.out.println("You haven't booked a room yet.");
@@ -154,8 +157,11 @@ public class Guest extends User
     public boolean show_options() throws FileNotFoundException {
        System.out.println("The options that you can do:\n");
         boolean return_val = true;
-        System.out.println("0 - Exit.\n1 - Book a room."+ (booked_room == null ? "" : "\n2 - Cancel a room"));
-        switch (input_no())
+        System.out.println("0 - Exit."+ (booked_room == null ? "\n1 - Book a room." : "\n1 - Cancel a room"));
+        int k = input_no();
+        if(booked_room != null)
+            ++k;
+        switch (k)
         {
             case 0:
                 System.out.println("Thank you " + get_name() + " " + get_surname() + ".");

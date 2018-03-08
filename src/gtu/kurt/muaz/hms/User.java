@@ -74,7 +74,7 @@ public abstract class User implements Person
     /**
      * Guest | Receptionist ability. To book a room, user looks for empty rooms then choses in them.
      */
-    public abstract void book_room();
+    protected abstract boolean book_room();
 
     /**
      * Base method for asking user to chose operations.

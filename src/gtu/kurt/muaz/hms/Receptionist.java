@@ -97,13 +97,13 @@ public class Receptionist extends Guest
      *  Then updates shown rooms with checked-in information.
      * @return True: operation made. False: otherwise.
      */
-    public boolean check_in()
+    private boolean check_in()
     {
         boolean made = false;
         if(working_on.show(1) > 0)
         {
             int checker = input_no();
-            if(checker < working_on.data_set.size() && checker > -1)
+            if(checker < working_on.size() && checker > -1)
             {
                 if(working_on.data_set.get(checker).get_situation() == 2)
                     System.out.println("Sorry, this room is already checked in.");
@@ -129,13 +129,13 @@ public class Receptionist extends Guest
      * If the filler user is this, updates booked room with null.
      * @return True: operation made. False: otherwise.
      */
-    public boolean check_out()
+    private boolean check_out()
     {
         boolean made = false;
         if(working_on.show(2) > 0)
         {
             int checker = input_no();
-            if(checker < working_on.data_set.size() && checker > -1)
+            if(checker < working_on.size() && checker > -1)
             {
                 if(working_on.data_set.get(checker).get_situation() == 0)
                     System.out.println("Sorry, this room is already empty.");

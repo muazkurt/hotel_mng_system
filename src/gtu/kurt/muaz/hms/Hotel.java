@@ -30,6 +30,22 @@ public class Hotel
         get_rooms();
     }
 
+
+    public Room get(int at)
+    {
+        return data_set.get(at);
+    }
+
+    public Room set(int at, Room input)
+    {
+        return data_set.set(at, input);
+    }
+
+    public int size()
+    {
+        return data_set.size();
+    }
+
     /**
      * Opens room_db and gets all rooms with their situaitons.
      * @throws FileNotFoundException If there is not a file in declared path.
